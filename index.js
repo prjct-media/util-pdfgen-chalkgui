@@ -4,7 +4,7 @@ import fs from 'fs';
 import chalk from 'chalk'; // Import chalk for colored output
 import readline from 'readline';
 import prettyBytes from 'pretty-bytes'; // Use pretty-bytes instead of filesize
-
+import {_LAYOUT, _FONT, _COLOR, _CONFIG, _CHARS} from './variables.js'
 // Create a readline interface for user input
 const rl = readline.createInterface({
     input: process.stdin,
@@ -12,59 +12,11 @@ const rl = readline.createInterface({
 });
 
 
-/**
- * @summary Reference Table for Options.
- * C: Color of Log
- * F: Font Decoration
- * U: Utility, Formatting Concerns
- * SC: Standard Configurations,
- * */
-const CH = {
-    // colors of log
-    C: {
-        // White: DF for output
-        W: '#fff',
-        // Red: error messages.
-        R: '#FF0000',
-        // Green: success
-        G: '#00FF00',
-        // Green Alternating
-        G_A: ['#00FF00', '#009900'],
-        // Green List.
-        G_L: ['#00FF00', '#00E600', '#00CC00', '#00B300', '#009900', '#008000', '#006600', '#004D00', '#003300', '#001A00'],
-        // Blue: info/data
-        B: '#1E90FF',
-        // Yellow: Warning
-        Y: '#FFD700',
-        // Orange: Warning Alternate.
-        O: '#FFA500',
-        // Orange List.
-        O_L: ['#FFA500', '#FFB347', '#FF8C00', '#FF7F50', '#FF6F00', '#E65100', '#FF6347', '#FF4500', '#D2691E', '#A0522D'],
-    },
-    F: {
-        B: 'bold',
-        U: 'underline'
-    },
-    U: {
-        DEF: 'default',
-        SC: 'single-char',
-        D: 'divider',
-        BL: 'boxed-log',
-        N: 'nested'
-    },
-    SC: {
-        // padded length
-        L: 50,
-        // padding Char
-        PC: ' ',
-        // Bumper Char
-        BC: '|'
-    }
-}
+
 
 let configKeys;
 let configData;
-
+// Function to remove the last line
 function removeLastLine() {
     readline.moveCursor(process.stdout, 0, -1); // Move cursor up one line
     readline.clearLine(process.stdout, 1); // Clear the line
@@ -81,16 +33,16 @@ function removeLastLine() {
  * @param _fLength How much padding you want.
  * @param _fPadChar Character to pad with.
  * @param _fBumperChar Char to start and end with. Can be its own color.
- * @see {CH} for color references.
+ * @see {_COLOR} for color references.
  *
- * @example A: _cLog('Foo Bar...', [CH.C.G, CH.F.B, CH.F.U])
+ * @example A: _cLog('Foo Bar...', [_COLOR.GREEN, _FONT.BOLD, _FONT.UNDERLINE])
  *         This would log "Foo Bar..." bold, underlined, in green.
  * @example B: _cLog('Im a royal looking log', ['#7851A9'])
  *          This would log "Im a royal looking log" in purple
  * @example C: _cLog('Plain Log')
  *          This would log a standard white log.
  * */
-function cLog(_log, _colorOpts = [CH.C.W], _formatType = CH.U.DEF, _fLength = CH.SC.L, _fPadChar = CH.SC.PC, _fBumperChar = CH.SC.BC) {
+function cLog(_log, _colorOpts = [_COLOR.WHITE], _formatType = _LAYOUT.DEF, _fLength = _CONFIG.PAD_END_LEN, _fPadChar = _CHARS.PADDING, _fBumperChar = _CHARS.BUMPER) {
     /** Index 0 will be the hexcode color of the log. */
     let color = _colorOpts.shift();
     /** Base Command sets the color of the log. */
@@ -105,41 +57,39 @@ function cLog(_log, _colorOpts = [CH.C.W], _formatType = CH.U.DEF, _fLength = CH
 
 /**
  * @summary Utility class that provides different formatted logs.
+ * @param {string} _log The log to be formatted.
+ * @param {string} _layout how to display the log in the console.
+ * @param {object} data collection of data relevant to each switch case.
+ * @returns Chalk Formatted String.
  * */
-function fLog(_log, _type, data) {
+function fLog(_log, _layout, data) {
     let formattedLog;
-    switch( _type ) {
-    case CH.U.DEF:
-        // default
-        formattedLog = _log;
-        break;
-    case CH.U.SC:
+    switch( _layout ) {
+    case _LAYOUT.SC:
         // colorize a single char
         formattedLog = chalk.hex(data.color)(_log);
         break;
-    case CH.U.BL:
+    case _LAYOUT.BL:
         // boxed text
         let divider = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
         formattedLog = `${divider}\n${_log}\n${divider}`;
         break;
-    case CH.U.D:
+    case _LAYOUT.D:
         formattedLog = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
         break;
-    case CH.U.N:
-        let prepend = chalk.hex(data.prepend.color)(data.prepend.text);
-        formattedLog = `${prepend}${_log}`
-    break;
     case '':
-
-    break;
+    case _LAYOUT.DEF:
+        // default
+        formattedLog = _log;
+        break;
     }
 
     return formattedLog;
 }
 
 function question1() {
-    cLog(' Your Selection... ', [CH.C.O, CH.F.B],  CH.U.BL);
-    let question_selectYourOption = fLog('| user$ ', CH.U.SC, {color: CH.C.O})
+    cLog(' Your Selection... ', [_COLOR.ORANGE, _FONT.BOLD],  _LAYOUT.BL);
+    let question_selectYourOption = fLog('| user$ ', _LAYOUT.SC, {color: _COLOR.ORANGE})
     rl.question(question_selectYourOption, (answer) => {
         // Clears User Inputted Line, which is ugly.
         removeLastLine();
@@ -147,16 +97,14 @@ function question1() {
         // Discern the length of input and format the bumpers to that.
         let padEndLength = (`Selection: ${answer}.`).length
         // base is orange, same as rest of answer.
-        let base = fLog(`Selection:`, CH.U.SC, {color: CH.C.O});
+        let base = fLog(`Selection:`, _LAYOUT.SC, {color: _COLOR.ORANGE});
         // user input is blue.
-        let input = fLog((`${answer}. ${(configKeys[answer-1])}`).padEnd(CH.SC.L-padEndLength, CH.SC.PC), CH.U.SC, {color: CH.C.B})
+        let input = fLog((`${answer}. ${(configKeys[answer-1])}`).padEnd(_CONFIG.PAD_END_LEN-padEndLength, _CHARS.PADDING), _LAYOUT.SC, {color: _COLOR.BLUE})
         // log user selection
-        cLog(` ${base} ${input} `, [CH.C.O, CH.F.B], CH.U.DEF, CH.SC.L, CH.SC.PC, fLog(CH.SC.BC, CH.U.SC, {color: CH.C.O}));
+        cLog(` ${base} ${input} `, [_COLOR.ORANGE, _FONT.BOLD], _LAYOUT.DEF, _CONFIG.PAD_END_LEN, _CHARS.PADDING, fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.ORANGE}));
         // mark errors if outside range, bounce back to the question again.
         if ( answer >= configKeys.length || answer <= 0) {
-            console.log('\n');
-            cLog(` Invalid Selection: ${answer} not between 1 and ${configKeys.length}`, [CH.C.R, CH.F.B], CH.U.BL);
-            console.log('\n');
+            cLog(` Invalid Selection: ${answer} not between 1 and ${configKeys.length}`, [_COLOR.RED, _FONT.BOLD], _LAYOUT.BL);
             return question1();
         }
         // Compile Files.
@@ -174,13 +122,13 @@ function promptUser() {
                 console.error(`Data not found in the configuration.`);
                 process.exit(1);
             }
-            cLog(' Select an option... ', [CH.C.G, CH.F.B],  CH.U.BL);
+            cLog(' Select an option... ', [_COLOR.GREEN, _FONT.BOLD],  _LAYOUT.BL);
             let op = 0;
             configKeys.forEach((key, i) => {
-                cLog(`${i+1}. ${key}`, [CH.C.G_A[op], CH.F.B], CH.U.DEF ,CH.SC.L, ' ', fLog(CH.SC.BC, CH.U.SC, {color: CH.C.G}));
+                cLog(`${i+1}. ${key}`, [_COLOR.GREEN_ALT[op], _FONT.BOLD], _LAYOUT.DEF ,_CONFIG.PAD_END_LEN, ' ', fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.GREEN}));
                 op = (op === 0 ? 1 : 0);
             });
-            cLog('// divider: end of select an option', [CH.C.G, CH.F.B], CH.U.D );
+            cLog('// divider: end of select an option', [_COLOR.GREEN, _FONT.BOLD], _LAYOUT.D );
 
             question1()
         })
