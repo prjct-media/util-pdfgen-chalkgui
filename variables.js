@@ -1,52 +1,9 @@
 /**
- * @summary Reference Table for Options.
- * C: Color of Log
- * F: Font Decoration
- * U: Utility, Formatting Concerns
- * SC: Standard Configurations,
+ * @summary Lookup values tied to the use of Chalk.
  * */
-export const CH = {
-    // Colors
-    C: {
-        // White: DF for output
-        W: '#fff',
-        // Red: error messages.
-        R: '#FF0000',
-        // Green: success
-        G: '#00FF00',
-        // Green Alternating
-        G_A: ['#00FF00', '#009900'],
-        // Green List.
-        G_L: ['#00FF00', '#00E600', '#00CC00', '#00B300', '#009900', '#008000', '#006600', '#004D00', '#003300', '#001A00'],
-        // Blue: info/data
-        B: '#1E90FF',
-        // Yellow: Warning
-        Y: '#FFD700',
-        // Orange: Warning Alternate.
-        O: '#FFA500',
-        // Orange List.
-        O_L: ['#FFA500', '#FFB347', '#FF8C00', '#FF7F50', '#FF6F00', '#E65100', '#FF6347', '#FF4500', '#D2691E', '#A0522D'],
-    },
-    // Font Formatting
-    F: {
-        // Bolded Logs
-        B: 'bold',
-        // Underline Logs
-        U: 'underline'
-    },
-    SC: {
-        // padded length
-        L: 50,
-        // padding Char
-        PC: ' ',
-        // Bumper Char
-        BC: '|'
-    }
-}
-
 
 /**
- * @summary Characters used often
+ * @summary Characters used often. Allows for a global update of a style.
  * */
 export const _CHARS = {
     /**  Start and End Char of a Line
