@@ -2,13 +2,6 @@
 
 ---
 
-> Setup Commands
-> ```sh
-> npm i
-> ```
-> ```sh
-> node index.js
-> ```
 
 ```
 Script Basics
@@ -40,3 +33,15 @@ So, if facing any issues, be sure to refer the Author System section below.
 | chalk          | v5.3.0   | Gives logs color and styles. Simply for aesthetics. |
 |---------------------------------------------------------------------------------|
 ```
+
+
+ #### Setup Commands
+ 
+ ---
+ 
+ ```sh
+ npm i
+ ```
+ ```sh
+ node index.js
+ ```
