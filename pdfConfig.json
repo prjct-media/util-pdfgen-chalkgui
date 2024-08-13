@@ -1,0 +1,210 @@
+{
+  "Group1": [
+    {
+      "fileName": "1FC_Q16",
+      "bodyText": "1FC_Q16.",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "2FC_Q17",
+      "bodyText": "2FC_Q17.",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "3FC_Q19",
+      "bodyText": "3FC_Q19.",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "4FAInfo",
+      "bodyText": "4FAInfo",
+      "backgroundColor": "#7851A9",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "5CMS",
+      "bodyText": "5CMS",
+      "backgroundColor": "#FCBA03",
+      "sizeInMB": 0.1
+    }
+  ],
+  "CCRPP": [
+    {
+      "fileName": "6PC_Q3_no",
+      "bodyText": "6PC_Q3_no",
+      "backgroundColor": "#77fc03",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "7PC_Q4_no",
+      "bodyText": "7PC_Q4_no",
+      "backgroundColor": "#20fc03",
+      "sizeInMB": 10
+    },
+    {
+      "fileName": "8PC_Q5_no",
+      "bodyText": "8PC_Q5_no",
+      "backgroundColor": "#03fc7b",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "9PC_Q6_yes",
+      "bodyText": "9PC_Q6_yes",
+      "backgroundColor": "#03fc98",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "10PC_Q10_yes_justification",
+      "bodyText": "10PC_Q10_yes_justification",
+      "backgroundColor": "#03fcc2",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "11PC_Q10_yes_signedStatement",
+      "bodyText": "11PC_Q10_yes_signedStatement",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "12PC_Q11_yes",
+      "bodyText": "12PC_Q11_yes",
+      "backgroundColor": "#03fce3",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "13B_LR_Documentation",
+      "bodyText": "13B_LR_Documentation",
+      "backgroundColor": "#03ebfc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "14B_SC_1",
+      "bodyText": "14B_SC_1",
+      "backgroundColor": "#03a1fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "15B_SC_1_rFFV",
+      "bodyText": "15B_SC_1_rFFV",
+      "backgroundColor": "#03a1fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "16B_SC_2",
+      "bodyText": "16B_SC_2",
+      "backgroundColor": "#037bfc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "17B_SC_2_rFFV",
+      "bodyText": "17B_SC_2_rFFV",
+      "backgroundColor": "#037bfc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "18B_SC_3",
+      "bodyText": "18B_SC_3",
+      "backgroundColor": "#0362fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "19B_SC_3_rFFV",
+      "bodyText": "19B_SC_3_rFFV",
+      "backgroundColor": "#0362fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "20B_MSP",
+      "bodyText": "20B_MSP",
+      "backgroundColor": "#0341fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "21B_Investor_1_LetterOfCommitment",
+      "bodyText": "21B_Investor_1_LetterOfCommitment",
+      "backgroundColor": "#0320fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "22B_Investor_2_LetterOfCommitment",
+      "bodyText": "22B_Investor_2_LetterOfCommitment",
+      "backgroundColor": "#3d03fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "23B_Investor_3_LetterOfCommitment",
+      "bodyText": "23B_Investor_3_LetterOfCommitment",
+      "backgroundColor": "#6203fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "24B_O_1_FORVENREQ",
+      "bodyText": "24B_O_1_FORVENREQ",
+      "backgroundColor": "#8403fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "25B_O_1_SUPDOC",
+      "bodyText": "25B_O_1_SUPDOC",
+      "backgroundColor": "#8403fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "26B_O_2_FORVENREQ",
+      "bodyText": "26B_O_2_FORVENREQ",
+      "backgroundColor": "#b103fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "27B_O_2_SUPDOC",
+      "bodyText": "27B_O_2_SUPDOC",
+      "backgroundColor": "#b103fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "28TP_HASIT_No",
+      "bodyText": "28TP_HASIT_No",
+      "backgroundColor": "#db03fc",
+      "sizeInMB": 0.1
+    },
+    {
+      "fileName": "29END_Template",
+      "bodyText": "29END_Template",
+      "backgroundColor": "#fc0377",
+      "sizeInMB": 0.1
+    }
+  ],
+  "Example2": [
+    {
+      "fileName": "fileA",
+      "bodyText": "This is a test PDF document.",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 10
+    },
+    {
+      "fileName": "fileB",
+      "bodyText": "Another test PDF with different settings.",
+      "backgroundColor": "#00FF00",
+      "sizeInMB": 0.05
+    }
+  ],
+  "Example3": [
+    {
+      "fileName": "fileA",
+      "bodyText": "This is a test PDF document.",
+      "backgroundColor": "#FF0000",
+      "sizeInMB": 10
+    },
+    {
+      "fileName": "fileB",
+      "bodyText": "Another test PDF with different settings.",
+      "backgroundColor": "#00FF00",
+      "sizeInMB": 0.05
+    }
+  ]
+}
+
+
