@@ -1,7 +1,5 @@
 ## Utility - PDF Dummy Data Generator Basics
 
----
-
 
 ```
 Script Basics
