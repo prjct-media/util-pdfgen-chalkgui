@@ -4,14 +4,16 @@ import fs from 'fs';
 import chalk from 'chalk'; // Import chalk for colored output
 import readline from 'readline';
 import prettyBytes from 'pretty-bytes'; // Use pretty-bytes instead of filesize
-import {_LAYOUT, _FONT, _COLOR, _CONFIG, _CHARS} from './variables.js'
+import {_LAYOUT, _FONT, _COLOR, _CONFIG, _CHARS} from './variables.js';
+import {ChalkEngine} from './chalk-engine.js';
 // Create a readline interface for user input
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
-
+const testMode = true;
+let _chalk = new ChalkEngine();
+chalk.level = 3;
 
 
 let configKeys;
@@ -42,7 +44,7 @@ function removeLastLine() {
  * @example C: _cLog('Plain Log')
  *          This would log a standard white log.
  * */
-function cLog(_log, _colorOpts = [_COLOR.WHITE], _formatType = _LAYOUT.DEF, _fLength = _CONFIG.PAD_END_LEN, _fPadChar = _CHARS.PADDING, _fBumperChar = _CHARS.BUMPER) {
+function cLog(_log, _colorOpts = [_COLOR.WHITE], _formatType = _LAYOUT.DEFAULT, _fLength = _CONFIG.PAD_END_LEN, _fPadChar = _CHARS.PADDING, _fBumperChar = _CHARS.BUMPER) {
     /** Index 0 will be the hexcode color of the log. */
     let color = _colorOpts.shift();
     /** Base Command sets the color of the log. */
@@ -74,11 +76,11 @@ function fLog(_log, _layout, data) {
         let divider = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
         formattedLog = `${divider}\n${_log}\n${divider}`;
         break;
-    case _LAYOUT.D:
+    case _LAYOUT.DIVIDER:
         formattedLog = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
         break;
     case '':
-    case _LAYOUT.DEF:
+    case _LAYOUT.DEFAULT:
         // default
         formattedLog = _log;
         break;
@@ -101,7 +103,7 @@ function question1() {
         // user input is blue.
         let input = fLog((`${answer}. ${(configKeys[answer-1])}`).padEnd(_CONFIG.PAD_END_LEN-padEndLength, _CHARS.PADDING), _LAYOUT.SC, {color: _COLOR.BLUE})
         // log user selection
-        cLog(` ${base} ${input} `, [_COLOR.ORANGE, _FONT.BOLD], _LAYOUT.DEF, _CONFIG.PAD_END_LEN, _CHARS.PADDING, fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.ORANGE}));
+        cLog(` ${base} ${input} `, [_COLOR.ORANGE, _FONT.BOLD], _LAYOUT.DEFAULT, _CONFIG.PAD_END_LEN, _CHARS.PADDING, fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.ORANGE}));
         // mark errors if outside range, bounce back to the question again.
         if ( answer >= configKeys.length || answer <= 0) {
             cLog(` Invalid Selection: ${answer} not between 1 and ${configKeys.length}`, [_COLOR.RED, _FONT.BOLD], _LAYOUT.BL);
@@ -125,10 +127,10 @@ function promptUser() {
             cLog(' Select an option... ', [_COLOR.GREEN, _FONT.BOLD],  _LAYOUT.BL);
             let op = 0;
             configKeys.forEach((key, i) => {
-                cLog(`${i+1}. ${key}`, [_COLOR.GREEN_ALT[op], _FONT.BOLD], _LAYOUT.DEF ,_CONFIG.PAD_END_LEN, ' ', fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.GREEN}));
+                cLog(`${i+1}. ${key}`, [_COLOR.GREEN_ALT[op], _FONT.BOLD], _LAYOUT.DEFAULT ,_CONFIG.PAD_END_LEN, ' ', fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.GREEN}));
                 op = (op === 0 ? 1 : 0);
             });
-            cLog('// divider: end of select an option', [_COLOR.GREEN, _FONT.BOLD], _LAYOUT.D );
+            cLog('// divider: end of select an option', [_COLOR.GREEN, _FONT.BOLD], _LAYOUT.DIVIDER );
 
             question1()
         })
@@ -236,4 +238,50 @@ async function processPDFs(configArray, solicitationPath) {
 }
 
 // Start the user prompt
-promptUser();
+//
+chalk.hex(_COLOR.BLUE)('Hi')
+
+
+//_
+//_chalk.log(' Select ', {layout: _LAYOUT.DEFAULT});
+//_chalk.log(' Select ', {layout: _LAYOUT.DIVIDER});
+//_chalk.log(['Select', 'Your', 'Next'], {layout: _LAYOUT.MULTI});
+
+//_chalk.log(`${chalk.hex(_COLOR.BLUE)('Hi')} ${chalk.hex(_COLOR.RED)('Bye')}`, {layout: _LAYOUT.DIVIDER})
+
+if ( testMode ) {
+    /**
+     * Default Logging Format. These are all the same output.
+     * _chalk.log('Default Formatting.');
+     _  chalk.log('Default Log. Full Example.', {layout: _LAYOUT.DEFAULT, color: _COLOR.WHITE});
+     _  chalk.log('Default Log. Full Example.', this.logOptions());
+     * */
+    _chalk.log('DEF. Default Formatting.');
+    console.log('\n');
+    _chalk.log('SC. Simple Chars. Does not add bumpers. Styles Added.', {layout: _LAYOUT.SC, color: _COLOR.ORANGE, fonts: [_FONT.BOLD, _FONT.UNDERLINE]});
+    console.log('\n');
+    _chalk.log('DEF. Default Format. Styles Added.', {layout: _LAYOUT.DEFAULT, color: _COLOR.GREEN, fonts: [_FONT.BOLD, _FONT.UNDERLINE]});
+    console.log('\n');
+    _chalk.log('DIVIDER. Styles can be changed as desired.', {layout: _LAYOUT.DIVIDER, color: _COLOR.YELLOW, fonts: [_FONT.BOLD]});
+    console.log('\n');
+    _chalk.log('BL. Box wraps log. Good for headers. ', {layout: _LAYOUT.BL, color: _COLOR.YELLOW, fonts: [_FONT.BOLD]});
+    console.log('\n');
+    /**
+     * _options.multi is where you set your array of colors, using hexcodes.
+     * bumperChar is set to blank so that double bumpers dont show inside the box.
+     * This isnt necessary, you can place whatever you want in the bumperChar.
+     * */
+    let innerBox = _chalk.create(['BL. Customized.', 'inject a multi-segment', 'into the boxed-log'], {layout: _LAYOUT.MULTI, bumperChar: ''})
+    _chalk.log(innerBox, {layout: _LAYOUT.BL, color: _COLOR.BLUE});
+    console.log('\n');
+    let customBumperChar = _chalk.create('|', {layout: _LAYOUT.SC, color: _COLOR.PURPLE, fonts: [_FONT.BOLD]});
+    _chalk.log('Default. With different colored bumpers.', {bumperChar:customBumperChar, layout: _LAYOUT.DEFAULT, color: _COLOR.YELLOW, fonts: [_FONT.BOLD]});
+    console.log('\n');
+    _chalk.log('DIVIDER. Custom Bumper Style.', {bumperChar:customBumperChar, layout: _LAYOUT.DIVIDER, color: _COLOR.YELLOW, fonts: [_FONT.BOLD]});
+} else {
+    promptUser();
+}
+
+process.exit()
+
+
