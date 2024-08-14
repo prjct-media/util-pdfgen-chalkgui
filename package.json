@@ -1,0 +1,19 @@
+{
+  "name": "pdf-dummy-data-generator",
+  "version": "1.0.0",
+  "description": "Generate PDF Files from a JSON configuration file.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "JS_ON (Joseph Shannon)",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "5.3.0",
+    "path": "0.12.7",
+    "pdfkit": "0.15.0",
+    "pretty-bytes": "6.1.1"
+  }
+}
