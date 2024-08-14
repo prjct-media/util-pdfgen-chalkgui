@@ -6,14 +6,16 @@ import readline from 'readline';
 import prettyBytes from 'pretty-bytes'; // Use pretty-bytes instead of filesize
 import {_LAYOUT, _FONT, _COLOR, _CONFIG, _CHARS} from './variables.js';
 import {ChalkEngine} from './chalk-engine.js';
-// Create a readline interface for user input
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-const testMode = true;
+
+const testMode = false;
 let _chalk = new ChalkEngine();
-chalk.level = 3;
+// Create a readline interface for user input
+
 
 
 let configKeys;
@@ -25,92 +27,23 @@ function removeLastLine() {
     readline.moveCursor(process.stdout, 0, 0); // Move cursor to the beginning of the cleared line
 }
 
-
-/**
- * @summary Generate a styled console log to improve readability.
- * @param _log Message you want logged.
- * @param _colorOpts string array of style options. (index 0 must be hexcode).
- * @param _fOpts string array of formatting options. Array order: Padding length, pad character, start/end char
- * @param _formatType Include formatting. Such as dividers before and after.
- * @param _fLength How much padding you want.
- * @param _fPadChar Character to pad with.
- * @param _fBumperChar Char to start and end with. Can be its own color.
- * @see {_COLOR} for color references.
- *
- * @example A: _cLog('Foo Bar...', [_COLOR.GREEN, _FONT.BOLD, _FONT.UNDERLINE])
- *         This would log "Foo Bar..." bold, underlined, in green.
- * @example B: _cLog('Im a royal looking log', ['#7851A9'])
- *          This would log "Im a royal looking log" in purple
- * @example C: _cLog('Plain Log')
- *          This would log a standard white log.
- * */
-function cLog(_log, _colorOpts = [_COLOR.WHITE], _formatType = _LAYOUT.DEFAULT, _fLength = _CONFIG.PAD_END_LEN, _fPadChar = _CHARS.PADDING, _fBumperChar = _CHARS.BUMPER) {
-    /** Index 0 will be the hexcode color of the log. */
-    let color = _colorOpts.shift();
-    /** Base Command sets the color of the log. */
-    let cmd = chalk.hex(color);
-    /** Append style options to the command. ie; chalk.hex('#fff)['bold']['underline'] */
-    _colorOpts.forEach(_op => { cmd = cmd[_op] } );
-    /** Formats output in a consisten manner.*/
-    let formattedLog = `${_fBumperChar}${_log.padEnd(_fLength, _fPadChar)}${_fBumperChar}`;
-    /** Log the finalized command. */
-    console.log(cmd(fLog(formattedLog, _formatType, {color: color, length: _fLength, chars: {bumper: _fBumperChar}})));
-}
-
-/**
- * @summary Utility class that provides different formatted logs.
- * @param {string} _log The log to be formatted.
- * @param {string} _layout how to display the log in the console.
- * @param {object} data collection of data relevant to each switch case.
- * @returns Chalk Formatted String.
- * */
-function fLog(_log, _layout, data) {
-    let formattedLog;
-    switch( _layout ) {
-    case _LAYOUT.SC:
-        // colorize a single char
-        formattedLog = chalk.hex(data.color)(_log);
-        break;
-    case _LAYOUT.BL:
-        // boxed text
-        let divider = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
-        formattedLog = `${divider}\n${_log}\n${divider}`;
-        break;
-    case _LAYOUT.DIVIDER:
-        formattedLog = chalk.hex(data.color)(data.chars.bumper + ''.padEnd(data.length, '-') + data.chars.bumper);
-        break;
-    case '':
-    case _LAYOUT.DEFAULT:
-        // default
-        formattedLog = _log;
-        break;
-    }
-
-    return formattedLog;
-}
-
 function question1() {
-    cLog(' Your Selection... ', [_COLOR.ORANGE, _FONT.BOLD],  _LAYOUT.BL);
-    let question_selectYourOption = fLog('| user$ ', _LAYOUT.SC, {color: _COLOR.ORANGE})
-    rl.question(question_selectYourOption, (answer) => {
+    _chalk.log(`Your Selection...`);
+    let q1_selectOption = _chalk.format('| user$ ', {layout: _LAYOUT.SC, color: _COLOR.PURPLE, fonts: [_FONT.BOLD]});
+    rl.question(q1_selectOption, (answer) => {
+        let answerKey = configKeys[answer-1]
         // Clears User Inputted Line, which is ugly.
         removeLastLine();
 
-        // Discern the length of input and format the bumpers to that.
-        let padEndLength = (`Selection: ${answer}.`).length
-        // base is orange, same as rest of answer.
-        let base = fLog(`Selection:`, _LAYOUT.SC, {color: _COLOR.ORANGE});
-        // user input is blue.
-        let input = fLog((`${answer}. ${(configKeys[answer-1])}`).padEnd(_CONFIG.PAD_END_LEN-padEndLength, _CHARS.PADDING), _LAYOUT.SC, {color: _COLOR.BLUE})
-        // log user selection
-        cLog(` ${base} ${input} `, [_COLOR.ORANGE, _FONT.BOLD], _LAYOUT.DEFAULT, _CONFIG.PAD_END_LEN, _CHARS.PADDING, fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.ORANGE}));
+        // Display Selected Answer.
+        _chalk.log(`Selected Answer: ${answerKey}`);
         // mark errors if outside range, bounce back to the question again.
         if ( answer >= configKeys.length || answer <= 0) {
-            cLog(` Invalid Selection: ${answer} not between 1 and ${configKeys.length}`, [_COLOR.RED, _FONT.BOLD], _LAYOUT.BL);
+            _chalk.log(`Invalid Selection: ${answer} not between 1 and ${configKeys.length}`);
             return question1();
         }
         // Compile Files.
-        runPathLogic(configKeys[answer-1]);
+        runPathLogic(answerKey);
     })
 }
 
@@ -124,13 +57,14 @@ function promptUser() {
                 console.error(`Data not found in the configuration.`);
                 process.exit(1);
             }
-            cLog(' Select an option... ', [_COLOR.GREEN, _FONT.BOLD],  _LAYOUT.BL);
-            let op = 0;
+            _chalk.log(' Select an option... ');
+            
+            console.log(configKeys)
             configKeys.forEach((key, i) => {
-                cLog(`${i+1}. ${key}`, [_COLOR.GREEN_ALT[op], _FONT.BOLD], _LAYOUT.DEFAULT ,_CONFIG.PAD_END_LEN, ' ', fLog(_CHARS.BUMPER, _LAYOUT.SC, {color: _COLOR.GREEN}));
-                op = (op === 0 ? 1 : 0);
+                _chalk.log(`${i+1}. ${key}`);
             });
-            cLog('// divider: end of select an option', [_COLOR.GREEN, _FONT.BOLD], _LAYOUT.DIVIDER );
+
+            _chalk.log('', {layout: _LAYOUT.DIVIDER});
 
             question1()
         })
@@ -237,18 +171,6 @@ async function processPDFs(configArray, solicitationPath) {
     }
 }
 
-// Start the user prompt
-//
-chalk.hex(_COLOR.BLUE)('Hi')
-
-
-//_
-//_chalk.log(' Select ', {layout: _LAYOUT.DEFAULT});
-//_chalk.log(' Select ', {layout: _LAYOUT.DIVIDER});
-//_chalk.log(['Select', 'Your', 'Next'], {layout: _LAYOUT.MULTI});
-
-//_chalk.log(`${chalk.hex(_COLOR.BLUE)('Hi')} ${chalk.hex(_COLOR.RED)('Bye')}`, {layout: _LAYOUT.DIVIDER})
-
 if ( testMode ) {
     /**
      * Default Logging Format. These are all the same output.
@@ -273,6 +195,7 @@ if ( testMode ) {
      * */
     let innerBox = _chalk.create(['BL. Customized.', 'inject a multi-segment', 'into the boxed-log'], {layout: _LAYOUT.MULTI, bumperChar: ''})
     _chalk.log(innerBox, {layout: _LAYOUT.BL, color: _COLOR.BLUE});
+
     console.log('\n');
     let customBumperChar = _chalk.create('|', {layout: _LAYOUT.SC, color: _COLOR.PURPLE, fonts: [_FONT.BOLD]});
     _chalk.log('Default. With different colored bumpers.', {bumperChar:customBumperChar, layout: _LAYOUT.DEFAULT, color: _COLOR.YELLOW, fonts: [_FONT.BOLD]});
@@ -282,6 +205,5 @@ if ( testMode ) {
     promptUser();
 }
 
-process.exit()
 
 
