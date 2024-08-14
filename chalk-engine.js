@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import {_CHARS, _COLOR, _CONFIG, _FONT, _LAYOUT} from "./variables.js"; // Import chalk for colored output
 
-chalk.level = 3;
+
 
 
 export class ChalkEngine {
@@ -21,7 +21,7 @@ export class ChalkEngine {
             color:      (ops?.color !== undefined ) ? ops.color :  _COLOR.WHITE,
             multi:      (ops?.multi !== undefined ) ? ops.multi : [_COLOR.RED, _COLOR.WHITE, _COLOR.BLUE],
             fonts:      (ops?.fonts !== undefined ) ? ops.fonts : [_FONT.BOLD],
-            layout:     (ops?.layout !== undefined ) ? ops.layout : _LAYOUT.DEF,
+            layout:     (ops?.layout !== undefined ) ? ops.layout : _LAYOUT.DEFAULT,
             length:     (ops?.length !== undefined ) ? ops.length : _CONFIG.PAD_END_LEN,
             padChar:    (ops?.padChar !== undefined ) ? ops.padChar : _CHARS.PADDING,
             // used for all bumpers.
