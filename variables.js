@@ -49,6 +49,8 @@ export const _COLOR= {
     ORANGE: '#FFA500',
     // Orange List.
     ORANGE_LIST: ['#FFA500', '#FFB347', '#FF8C00', '#FF7F50', '#FF6F00', '#E65100', '#FF6347', '#FF4500', '#D2691E', '#A0522D'],
+
+    PURPLE: '#7851A9'
 }
 
 /**
@@ -74,8 +76,9 @@ export const _FONT = {
  * @see {@link ./gen-dummy-data.js#fLog}
  * */
 export const _LAYOUT = {
-    DEF: 'default',
-    SC: 'single-char',
-    D: 'divider',
-    BL: 'boxed-log'
+    DEFAULT: 'default',
+    SC: 'simple-chars',
+    DIVIDER: 'divider',
+    BL: 'boxed-log',
+    MULTI: 'multiple-colors'
 }
