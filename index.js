@@ -1,7 +1,6 @@
 import PDFDocument from 'pdfkit';
 import path from 'path';
 import fs from 'fs';
-import chalk from 'chalk'; // Import chalk for colored output
 import readline from 'readline';
 import prettyBytes from 'pretty-bytes'; // Use pretty-bytes instead of filesize
 import {_LAYOUT, _FONT, _COLOR, _CONFIG, _CHARS} from './variables.js';
@@ -15,8 +14,6 @@ const rl = readline.createInterface({
 const testMode = false;
 let _chalk = new ChalkEngine();
 // Create a readline interface for user input
-
-
 
 let configKeys;
 let configData;
@@ -34,7 +31,6 @@ function question1() {
         let answerKey = configKeys[answer-1]
         // Clears User Inputted Line, which is ugly.
         removeLastLine();
-
         // Display Selected Answer.
         _chalk.log(`Selected Answer: ${answerKey}`);
         // mark errors if outside range, bounce back to the question again.
@@ -54,23 +50,17 @@ function promptUser() {
             configData = JSON.parse(data);
             configKeys = Object.keys(configData);
             if (!configData) {
-                console.error(`Data not found in the configuration.`);
+                _chalk.log(`Data not found in the configuration.`, {color: _COLOR.RED});
                 process.exit(1);
             }
             _chalk.log(' Select an option... ');
-            
-            console.log(configKeys)
             configKeys.forEach((key, i) => {
                 _chalk.log(`${i+1}. ${key}`);
             });
-
             _chalk.log('', {layout: _LAYOUT.DIVIDER});
-
             question1()
         })
 }
-
-
 
 // Function to handle the logic based on the selected path
 function runPathLogic(solicitation) {
@@ -78,9 +68,9 @@ function runPathLogic(solicitation) {
     const solicitationPath = path.resolve('./', solicitation);
     if (!fs.existsSync(solicitationPath)) {
         fs.mkdirSync(solicitationPath);
-        console.log(`Directory ${solicitation} created successfully.`);
+        _chalk.log(`Directory ${solicitation} created successfully.`, {color: _COLOR.GREEN});
     } else {
-        console.log(`Directory ${solicitation} already exists.`);
+        _chalk.log(`Directory ${solicitation} already exists.`, {color: _COLOR.BLUE});
     }
 
     // Load the configuration JSON
@@ -88,17 +78,18 @@ function runPathLogic(solicitation) {
         .then(data => {
             const configArray = JSON.parse(data)[solicitation];
             if (!configArray) {
-                console.error(`Solicitation "${solicitation}" not found in the configuration.`);
+                _chalk.log(`Solicitation "${solicitation}" not found in the configuration.`, {color: _COLOR.RED});
                 process.exit(1);
             }
             return processPDFs(configArray, solicitationPath);
         })
         .then(() => {
-            console.log('All PDFs generated successfully.');
+            _chalk.log(`All PDFs generated successfully.`, {color: _COLOR.GREEN});
             rl.close();
         })
         .catch(err => {
-            console.error('Error generating PDFs:', err);
+            _chalk.log(`Error generating PDFs...`, {color: _COLOR.RED});
+            console.error(err);
             rl.close();
         });
 }
@@ -132,12 +123,10 @@ function generatePDF(config, outputFileName, solicitationPath) {
         const outputPath = path.join(solicitationPath, outputFileName);
         const stream = fs.createWriteStream(outputPath);
         doc.pipe(stream);
-
         doc.end();
-
         stream.on('finish', () => {
             const fileSizeInBytes = fs.statSync(outputPath).size;
-            console.log(`Generated PDF: ${outputPath} - Size: ${prettyBytes(fileSizeInBytes)}`);
+            _chalk.log(`Generated PDF: ${outputFileName}`, {color: _COLOR.GREEN});
 
             // Check file size
             const targetSizeInBytes = config.sizeInMB * 1024 * 1024;
@@ -204,6 +193,3 @@ if ( testMode ) {
 } else {
     promptUser();
 }
-
-
-
